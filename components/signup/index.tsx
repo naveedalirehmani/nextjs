@@ -29,7 +29,7 @@ export const SignUp = () => {
     email: "",
     checkbox: false,
   });
-
+  const [isLoading,setIsLoading] = useState(false)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -39,15 +39,18 @@ export const SignUp = () => {
 
   const onSubmit = async () => {
     if (!userData.email || !userData.userName)
-      return console.log("email or username not entered");
+    return console.log("email or username not entered");
     if (userData.password !== userData.passwordConfirm || !userData.password)
-      return console.log("Passwords do not match");
+    return console.log("Passwords do not match");
     if (!userData.checkbox) return console.log("checkbox not checked");
+    setIsLoading(true);
     try {
       const result = await axiosSignup.post("/", userData);
       console.log(result.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error.response.data);
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +94,7 @@ export const SignUp = () => {
           </Link>
         </CheckDiv>
       </TermsContainer>
-      <CardButton onSubmit={() => onSubmit()} title="Sign Up" type="submit" />
+      <CardButton isLoading={isLoading} onSubmit={() => onSubmit()} title="Sign Up" type="submit" />
       <Footer>
         <P1>
           Already have a account?

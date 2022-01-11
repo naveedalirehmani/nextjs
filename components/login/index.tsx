@@ -20,6 +20,7 @@ import Image from "next/image";
 
 export const LogIn = () => {
   const [userToken, setUserToken] = useState<string>("");
+  const [isLoading,setIsLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<{
     email: string;
     password: string;
@@ -37,15 +38,18 @@ export const LogIn = () => {
   };
   const onSubmit = async () => {
     if (!userData.email || !userData.password)
-      return console.log("email or password not entered");
+    return console.log("email or password not entered");
     if (!userData.checkbox) return console.log("checkbox not checked");
-
+    
+    setIsLoading(true)
     try {
       const result = await axiosLogin.post<any>("/", userData);
       setUserToken(result.data.token);
       console.log(result.data);
+      setIsLoading(false)
     } catch (error) {
       console.log(error.response.data);
+      setIsLoading(false)
     }
   };
 
@@ -86,7 +90,7 @@ export const LogIn = () => {
           <A>Forget Password? </A>
         </CheckDiv>
       </TermsContainer>
-      <CardButton onSubmit={onSubmit} type="submit" title="Log In" />
+      <CardButton isLoading={isLoading} onSubmit={onSubmit} type="submit" title="Log In" />
       <Hr>Or</Hr>
       <div style={{ marginTop: "1rem" }}> </div>
       <Icons>
